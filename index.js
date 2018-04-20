@@ -31,7 +31,7 @@ const handlers = {
             this.emit(':responseReady');
         }
         else{
-            var platformSelect = this.event.request.intent.slots.SelPlatformRes.value.toLowerCase();
+            var platformSelect = this.event.request.intent.slots.SelPlatformRes.value;
             console.log('platform select from alexa: '+platformSelect);
             var mPlatform = getPlatformCode(platformSelect);
             this.attributes.platform = mPlatform;
@@ -56,6 +56,7 @@ const handlers = {
         console.log('skill show game coming');
         var myHandler = this;
         // var mAttr = this.attributes;
+        console.log("slot: "+JSON.stringify(this.event.request.intent.slots));
         if(this.event.request.intent.slots.ShowPlatformRes == null){
             this.response
                 .speak(skillConst.slotUnknowTxt)
@@ -63,7 +64,7 @@ const handlers = {
             this.emit(':responseReady');
         }
         else{
-            var platformSelect = this.event.request.intent.slots.ShowPlatformRes.value.toLowerCase();
+            var platformSelect = this.event.request.intent.slots.ShowPlatformRes.value;
             console.log('platform select from alexa: '+platformSelect);
             var mPlatform = getPlatformCode(platformSelect);
             this.attributes.platform = mPlatform;
@@ -86,8 +87,7 @@ const handlers = {
     'AMAZON.CancelIntent': function(){
         console.log('amazon cancel.');
         this.response
-            .speak(skillConst.welcomeTxt)
-            .listen(skillConst.welcomeListenTxt);
+            .speak(skillConst.endTxt)
         this.emit(':responseReady');
     },
     'AMAZON.StopIntent': function(){
@@ -131,17 +131,20 @@ var genComingDataSpeech = function(gameData){
 var getPlatformCode = function(platformSelect){
     console.log('platform from alexa: '+platformSelect);
     var mPlatform = -1;
-    if(platformSelect == skillConst.platformPS4 || platformSelect == skillConst.platformPlayStation4){
-        mPlatform = skillConst.platformPS4Code;
-    }
-    else if(platformSelect == skillConst.platformSwitch){
-        mPlatform = skillConst.platformNSCode;
-    }
-    else if(platformSelect == skillConst.platformXBOne || platformSelect == skillConst.platformXB1){
-        mPlatform = skillConst.platformXBOneCode;
-    }
-    else if(platformSelect == skillConst.platformPC){
-        mPlatform = skillConst.platformPCCode;
+    if(platformSelect){
+        mPlatformSelect = platformSelect.toLowerCase();
+        if(mPlatformSelect == skillConst.platformPS4 || mPlatformSelect == skillConst.platformPlayStation4){
+            mPlatform = skillConst.platformPS4Code;
+        }
+        else if(mPlatformSelect == skillConst.platformSwitch){
+            mPlatform = skillConst.platformNSCode;
+        }
+        else if(mPlatformSelect == skillConst.platformXBOne){
+            mPlatform = skillConst.platformXBOneCode;
+        }
+        else if(mPlatformSelect == skillConst.platformPC){
+            mPlatform = skillConst.platformPCCode;
+        }
     }
     return mPlatform;
 };
